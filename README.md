@@ -14,15 +14,15 @@
 
 Установка библиотек:
 
-'''commandline
+```commandline
 ./venv/bin/pip install -r requirements.txt
-'''
+```
 
 ## Запуск
 
-'''commandline
+```commandline
 ./venv/bin/python src/main.py
-'''
+```
 
 P.S. 1 - Рекомендуется создание виртуального окружения Python
 P.S. 2 - После первого запуска понадобится настроить config.ini, после чего запустите бота снова и он заработает в штатном режиме, если файл конфигурации не содержит ошибок.
