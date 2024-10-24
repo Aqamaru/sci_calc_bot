@@ -1,1 +1,4 @@
+config.ini
 venv/
+.handler-saves/
+src/__pycache__/
