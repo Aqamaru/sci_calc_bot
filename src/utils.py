@@ -1,9 +1,50 @@
-from telebot.types import Message
 
+def convert(quantity_value: str, data: str, velocity: str = "" ) -> str:
+    PLANKO = 6.62*10**(-34)
+    numq = 0
+    if quantity_value.count('*10^') != 0:
+        numq = from_si(quantity_value)
+    else:
+        numq = float(quantity_value)
+
+    numv = 0
+    if not velocity == "":
+        if not velocity.isdigit():
+            numv = from_si(velocity)
+        else:
+            numv = float(velocity)
+    data = data.replace('convert_from_', '').replace('to_', '')
+    data_l = data.split('_')
+    match data_l[1]:
+        case "waveifrequency":
+            match data_l[0]:
+                case "waveifrequency":
+                    return f"{to_si(numq)} {quantities['waveifrequency']}"
+                case "waveilenght":
+                    return f"{to_si(numv/numq)} {quantities['waveifrequency']}"
+                case "photonienergy":
+                    return f"{to_si(numq/PLANKO)} {quantities['waveifrequency']}"
+        case "waveilenght":
+            match data_l[0]:
+                case "waveifrequency":
+                    return f"{to_si(numv/numq)} {quantities['waveilenght']}"
+                case "waveilenght":
+                    return f"{to_si(numq)} {quantities['waveilenght']}"
+                case "photonienergy":
+                    return f"{to_si((PLANKO*numv)/numq)} {quantities['waveilenght']}"
+        case "photonienergy":
+            match data_l[0]:
+                case "waveifrequency":
+                    return f"{to_si(PLANKO*numq)} {quantities['photonienergy']}"
+                case "waveilenght":
+                    return f"{to_si((PLANKO*numv)/numq)} {quantities['photonienergy']}"
+                case "photonienergy":
+                    return f"{to_si(numq)} {quantities['photonienergy']}"
+    return ""
 
 def scale(num: str, data: str) -> str:
     numx = 0
-    if not num.isdigit():
+    if num.count('*10^') != 0:
         numx = from_si(num)
     else:
         numx = float(num)
@@ -44,13 +85,19 @@ def to_si(num: int | float) -> str:
 def from_si(num: str) -> int | float:
     num = num.replace('*10', '')
     nums = num.split('^')
-    if int(nums[0]) == 10:
+    if float(nums[0]) == 10:
         ans = 10**float(nums[1])
     else:
         ans = float(nums[0])*10**float(nums[1])
     if ans.is_integer():
         return int(ans)
     return ans
+
+quantities = {
+        'waveifrequency' : 'Гц',
+        'waveilenght' : 'м',
+        'photonienergy': 'Дж'
+        }
 
 scale_pows = {
         'quecto': -30,

@@ -12,7 +12,24 @@ class Text(str, Enum):
     GREETINGS = ("Здравствуйте!\n"
                  "Это бот-калькулятор.")
     
-    WHICH_CONVERT = ("Какую величину вы хотите перевести?")
+    WHICH_CONVERT_FROM = ("Какую величину вы хотите перевести?")
+
+    WHICH_CONVERT_TO = ("Какую величину вы хотите получить?")
+    
+    CONVERT_MEANINGS = ("ν - Частота волны\n"
+                        "λ - Длина волны\n"
+                        "E(ф) - Энергия фотона")
+    
+    CONVERT_ENTER = ("Введите значение для %q:\n"
+                     "Поддерживается ввод чисел в виде x*10^n\n"
+                     "Приставки Си не поддерживаются")
+    
+    CONVERT_ENTER_VELOCITY = ("Введите значение скорости распространения волны в среде:\n"
+                              "Поддерживается ввод чисел в виде x*10^n")
+    
+    # %m - буквенное обозначение
+    # %v - числовое значение + единицы измерения
+    CONVERT_FINAL = ("Результат: %m = %v")
 
     WHICH_CALCULATE = ("Какую величину вы хотите вычислить?")
 
@@ -33,6 +50,8 @@ class Text(str, Enum):
 
 class Button(str, Enum):
     CONVERT = ("Перевод")
+    
+    MEANINGS = ("Обозначения")
 
     CALCULATE = ("Вычисление")
 
@@ -43,6 +62,11 @@ class Button(str, Enum):
     BACK = ("Назад")
 
     BACK_TO_MAIN_MENU = ("Вернуться в меню")
+
+class Quantities(str, Enum):
+    WAVEIFREQUENCY = ("ν")
+    WAVEILENGHT = ("λ")
+    PHOTONIENERGY = ("E(ф)")
 
 class Scale(str, Enum):
     DECA = ("да")
