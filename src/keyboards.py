@@ -6,7 +6,7 @@ MADE BY Usanin Andrey a.k.a. Aqamaru
 
 """
 
-from text import Button, Quantities, Scale
+from text import Button, Profiles, Quantities, Scale
 from telebot.types import KeyboardButton, InlineKeyboardButton, ReplyKeyboardMarkup, InlineKeyboardMarkup
 
 MAIN_MENU = ReplyKeyboardMarkup(resize_keyboard = True)\
@@ -17,25 +17,54 @@ MAIN_MENU = ReplyKeyboardMarkup(resize_keyboard = True)\
         )))\
         .add(*(KeyboardButton(i) for i in (
             Button.HELP,
+        )))\
+        .add(*(KeyboardButton(i) for i in (
+            Button.SURVEY,
         )))
 
-WHICH_CALCULATE = InlineKeyboardMarkup(row_width = 3)\
-        .add(*(InlineKeyboardButton(i[0], i[1]) for i in (
-            ()
-        )))
+HELP = InlineKeyboardMarkup(row_width = 3)\
+        .add(*(InlineKeyboardButton(
+            text = i[0], callback_data = i[1])
+                for i in (
+                (Button.CONVERT, "help_convert"),
+                (Button.CALCULATE, "help_calculate"),
+                (Button.SCALING, "help_scaling")
+                    )
+                )
+            )
 
-def get_convert(data: str = ""):
+MARKS = ReplyKeyboardMarkup(resize_keyboard = True)\
+        .add(*(KeyboardButton(i) for i in range(1 , 11)))
+
+def get_calculate(data: str = "") -> InlineKeyboardMarkup:
+    calculate = InlineKeyboardMarkup(row_width = 3)
+    if data == "":
+        calculate.add(*(InlineKeyboardButton(
+            text = i[0], callback_data = f"calculate_{i[1]}")
+                for i in QUANTITIES_CALCULATE
+                )
+            )
+        calculate.add(InlineKeyboardButton(text = Button.MEANINGS, callback_data = "calculate_meanings"))
+    if data.endswith('fluence'):
+        calculate.add(*(InlineKeyboardButton(
+            text = i[0], callback_data = f"{data}_{i[1]}")
+                for i in PROFILES 
+                )
+            )
+    return calculate
+     
+def get_convert(data: str = "") -> InlineKeyboardMarkup:
     convert = InlineKeyboardMarkup(row_width = 3)
     if data == "":
         convert.add(*(InlineKeyboardButton(
                 text = i[0], callback_data = f"convert_from_{i[1]}_to_") 
-                    for i in QUANTITIES
+                    for i in QUANTITIES_CONVERT
                     )
                 )
     else:
         convert.add(*(InlineKeyboardButton(
                 text = i[0], callback_data = data + f"{i[1]}") 
-                    for i in QUANTITIES
+                    for i in QUANTITIES_CONVERT
                     )
                 )
     convert.add(InlineKeyboardButton(text = Button.MEANINGS, callback_data = "convert_meanings"))
@@ -106,7 +135,17 @@ def get_scale(data: str = "" ,is_positive: bool = True) -> InlineKeyboardMarkup:
             )
     return scales
 
-QUANTITIES = (
+PROFILES = (
+        (Profiles.GAUSIAN, Profiles.GAUSIAN._name_.lower()),
+        (Profiles.FLATTOP, Profiles.FLATTOP._name_.lower())
+        )
+
+QUANTITIES_CALCULATE = (
+        (Quantities.FLUENCE, Quantities.FLUENCE._name_.lower()),
+        (Quantities.RESONANCESPOT, Quantities.RESONANCESPOT._name_.lower())
+        )
+
+QUANTITIES_CONVERT = (
         (Quantities.WAVEIFREQUENCY, Quantities.WAVEIFREQUENCY._name_.lower()),
         (Quantities.WAVEILENGHT, Quantities.WAVEILENGHT._name_.lower()),
         (Quantities.PHOTONIENERGY, Quantities.PHOTONIENERGY._name_.lower())

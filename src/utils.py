@@ -1,8 +1,56 @@
+from math import pi
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib
+from scipy.signal import find_peaks, peak_widths
+
+matplotlib.use('agg')
+
+def calculate_s() -> None:
+    z = []
+    with open('specter.txt', 'r') as file :
+        z = file.readlines()
+    y = []  
+    for i in z:
+        y.append(int(i))
+
+    x = np.array(y)
+    peaks, _ = find_peaks(x)
+    half = peak_widths(x, peaks, rel_height=0.5)
+
+    plt.plot(x)
+    plt.plot(peaks, x[peaks], "x")
+    plt.hlines(*half[1:], color = "C2")
+    plt.savefig("graph.png")
+    return
+
+def calculate_f(data: str, avg_power: str, freq: str, diameter: str) -> str:
+    nump = 0
+    numf = 0
+    numd = 0
+    if ('*10^' in avg_power):
+        nump = from_si(avg_power)
+    else:
+        nump = float(avg_power)
+    if ('*10^' in freq):
+        numf = from_si(freq)
+    else:
+        numf = float(freq)
+    if ('*10^' in diameter):
+        numd = from_si(diameter)
+    else:
+        numd = float(diameter)
+    
+    square = pi * (numd**2/4)
+
+    if ('gausian' in data):
+        return f"{nump/(numf*square/2)} Дж/см^2"
+    return f"{nump/(numf*square)} Дж/см^2"
 
 def convert(quantity_value: str, data: str, velocity: str = "" ) -> str:
     PLANKO = 6.62*10**(-34)
     numq = 0
-    if quantity_value.count('*10^') != 0:
+    if ('*10^' in quantity_value):
         numq = from_si(quantity_value)
     else:
         numq = float(quantity_value)
